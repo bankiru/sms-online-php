@@ -1,0 +1,28 @@
+{
+  "name": "bankiru/sms-online",
+  "description": "Bindings for sms-online.ru SMS gateway",
+  "minimum-stability": "stable",
+  "keywords": [
+    "sms"
+  ],
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Bankiru\\Sms\\SmsOnline\\": "./"
+    }
+  },
+  "authors": [
+    {
+      "name": "Pavel Batanov",
+      "email": "pavel@batanov.me"
+    }
+  ],
+  "require": {
+    "php": "~5.6 || ~7.0",
+    "scaytrase/symfony-sms-delivery-bundle": "~2.1",
+    "guzzlehttp/guzzle": "~6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.1"
+  }
+}

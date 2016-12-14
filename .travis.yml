@@ -1,0 +1,36 @@
+language: php
+
+php:
+  - 5.6
+  - 7
+  - 7.1
+  - nightly
+  - hhvm
+
+env:
+  - PACKAGES='symfony/symfony=2.7.*'
+  - PACKAGES='symfony/symfony=2.8.*'
+  - PACKAGES='symfony/symfony=3.0.*'
+  - PACKAGES='symfony/symfony=3.1.*'
+  - PACKAGES='symfony/symfony=3.2.*'
+
+matrix:
+  include:
+    - php: 5.6
+      env: PACKAGES='symfony/symfony=2.7.*' deps='low'
+
+  allow_failures:
+    - php: hhvm
+    - php: nightly
+
+before_install:
+  - travis_retry composer self-update
+
+install:
+  - composer require --no-update ${PACKAGES}
+  - if [ "$deps" = "no"] || [ -z "$deps" ]; then composer --prefer-source install; fi;
+  - if [ "$deps" = "low" ]; then composer --prefer-source --prefer-lowest --prefer-stable update; composer --prefer-source install; fi;
+
+script:
+  - mkdir -p build
+  - vendor/bin/phpunit --colors -c phpunit.xml
