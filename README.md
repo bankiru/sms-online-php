@@ -1,4 +1,4 @@
-# sms-inline SMS
+# sms-online SMS
 PHP binding for sms-online.ru SMS gateway
 
 ## Installation
