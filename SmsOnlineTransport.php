@@ -23,16 +23,16 @@ final class SmsOnlineTransport implements TransportInterface
     /**
      * SmsOnlineTransport constructor.
      *
-     * @param SmsOnline       $client
-     * @param string          $sender
+     * @param SmsOnline $client
+     * @param string $sender
      * @param LoggerInterface $logger
-     * @param string          $transactionPrefix
+     * @param string $transactionPrefix
      */
     public function __construct(SmsOnline $client, $sender, LoggerInterface $logger = null, $transactionPrefix = '')
     {
-        $this->client            = $client;
-        $this->sender            = (string)$sender;
-        $this->logger            = $logger ?: new NullLogger();
+        $this->client = $client;
+        $this->sender = (string)$sender;
+        $this->logger = $logger ?: new NullLogger();
         $this->transactionPrefix = $transactionPrefix;
     }
 
@@ -44,10 +44,25 @@ final class SmsOnlineTransport implements TransportInterface
                 $message->getRecipient(),
                 $message->getBody(),
                 $this->sender,
-                $this->transactionPrefix . sha1(random_bytes(20))
+                $this->getTransactionPrefix($message)
             );
         } catch (GuzzleException $e) {
             throw new DeliveryFailedException($e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @param ShortMessageInterface $message
+     * @return string
+     */
+    private function getTransactionPrefix(ShortMessageInterface $message)
+    {
+        $prefix = $this->transactionPrefix;
+
+        if ($message instanceof PrefixedSmsInterface) {
+            $prefix = $message->getTransactionPrefix() ?: $prefix;
+        }
+
+        return $prefix . sha1(random_bytes(20));
     }
 }
